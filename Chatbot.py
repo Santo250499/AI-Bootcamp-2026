@@ -25,6 +25,7 @@ while True:
     print("3. Translate")
     print("4. Explain Code")
     print("5. Exit")
+    print("6. IT Helpdesk Assistant")
 
     choice = input("\nChoose an option: ")
 
@@ -67,6 +68,9 @@ while True:
 
         print("Goodbye!")
         break
+    
+    elif choice == "6":
+        
 
     else:
 
