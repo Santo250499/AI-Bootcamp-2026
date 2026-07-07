@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from openai import OpenAI
+from openai import OpenAI, RateLimitError, AuthenticationError
 
 
 load_dotenv()
@@ -23,17 +23,32 @@ def read_file(file_path):
 
 
 def ask_ai(prompt):
-    response = client.responses.create(
-        model=model,
-        instructions=(
-            "You are a professional resume reviewer and career coach. "
-            "Give clear, practical, beginner-friendly feedback. "
-            "Focus on ATS, job matching, and professional improvement."
-        ),
-        input=prompt,
-    )
+    try:
+        response = client.responses.create(
+            model=model,
+            instructions=(
+                "You are a professional resume reviewer and career coach. "
+                "Give clear, practical, beginner-friendly feedback. "
+                "Focus on ATS, job matching, and professional improvement."
+            ),
+            input=prompt,
+        )
 
-    return response.output_text
+        return response.output_text
+
+    except AuthenticationError:
+        return (
+            "OpenAI API authentication error. Your API key is invalid, expired, "
+            "revoked, or copied incorrectly. Please create a new API key and update your .env file."
+        )
+
+    except RateLimitError:
+        return (
+            "OpenAI API quota error. Please check your billing, credits, usage, and project limits."
+        )
+
+    except Exception as error:
+        return f"Something went wrong: {error}"
 
 
 def analyze_resume():
@@ -131,6 +146,33 @@ Requirements:
     print("\n===== COVER LETTER =====\n")
     print(result)
 
+def rewrite_bullet_points():
+    resume = read_file("sample_resume.txt")
+
+    if not resume:
+        print("sample_resume.txt not found.")
+        return
+
+    prompt = f"""
+Rewrite the resume bullet points below to make them stronger, more professional, and ATS-friendly.
+
+Resume:
+{resume}
+
+Rules:
+- Use strong action verbs
+- Keep the experience honest
+- Do not invent fake experience
+- Make it suitable for ICT Support, Cloud Support, and Microsoft 365 roles
+- Improve clarity and professionalism
+- Format the answer as strong resume bullet points
+"""
+
+    result = ask_ai(prompt)
+    print("\n===== REWRITTEN RESUME BULLET POINTS =====\n")
+    print(result)
+
+
 
 def main():
     while True:
@@ -138,7 +180,8 @@ def main():
         print("1. Analyze Resume Against Job Description")
         print("2. Improve Resume Summary")
         print("3. Generate Cover Letter")
-        print("4. Exit")
+        print("4. Rewrite Resume Bullet Points")
+        print("5. Exit")
 
         choice = input("\nChoose an option: ")
 
@@ -149,11 +192,12 @@ def main():
         elif choice == "3":
             generate_cover_letter()
         elif choice == "4":
+            rewrite_bullet_points()
+        elif choice == "5":
             print("Good job. Day 4 completed.")
             break
         else:
-            print("Invalid choice. Please choose 1, 2, 3, or 4.")
-
+            print("Invalid choice. Please choose 1, 2, 3, 4, or 5.")
 
 if __name__ == "__main__":
     main()
