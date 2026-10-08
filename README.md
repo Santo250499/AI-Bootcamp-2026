@@ -1,4 +1,4 @@
-# AI Bootcamp 2026
+# AI Learning Lab
 
 Personal Python practice repo from an AI bootcamp. It mixes small console exercises with a few OpenAI-backed scripts (resume analysis, chatbot menu, email draft). This is a learning workspace from the bootcamp.
 
@@ -55,8 +55,8 @@ OPENAI_MODEL=gpt-4.1-mini
 ## How to run
 
 ```bash
-git clone https://github.com/Santo250499/AI-Bootcamp-2026.git
-cd AI-Bootcamp-2026
+git clone https://github.com/Santo250499/ai-learning-lab.git
+cd ai-learning-lab
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
@@ -71,7 +71,7 @@ python resume_analyzer.py
 ## Project structure
 
 ```text
-AI-Bootcamp-2026/
+ai-learning-lab/
 ├── resume_analyzer.py
 ├── Chatbot.py
 ├── email_writer.py
